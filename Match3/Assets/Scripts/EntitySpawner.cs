@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -8,13 +9,17 @@ public class EntitySpawner : MonoBehaviour
     [SerializeField] private Camera _camera;
     [SerializeField] private GameObject _entityPrefab;
     [SerializeField] private Sprite[] _sprites;
+    [SerializeField] private float _deathWait;
+    private bool _turnAvaliable;
     private int _debugCount;
     private int _currentType;
+
 
     [SerializeField] private Dictionary<Vector3Int, GameTile> _tileDictionary = new Dictionary<Vector3Int, GameTile>();
 
     private void Start()
     {
+        _turnAvaliable = true;
         PopulateTiles();
     }
 
@@ -28,21 +33,41 @@ public class EntitySpawner : MonoBehaviour
 
     private void CheckTileData()
     {
-        Vector3 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
-        Vector3Int tilePos = _tilemap.WorldToCell(mousePos);
-
-        if (_tilemap.GetTile(tilePos) != null)
+        if (_turnAvaliable)
         {
-            _tileDictionary.TryGetValue(tilePos, out GameTile tile);
-            _currentType = tile.CurrentEntity.EntityType;
-            List<GameTile> oneTypeTiles = new List<GameTile>() { tile };
-            List<Vector3Int> checkedTiles = new List<Vector3Int>() { tilePos };
-            CheckOneTypeRecursive(tilePos, oneTypeTiles, checkedTiles);
-            foreach (GameTile gt in oneTypeTiles)
+            Vector3 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
+            Vector3Int tilePos = _tilemap.WorldToCell(mousePos);
+
+            if (_tilemap.GetTile(tilePos) != null)
             {
-                Destroy(gt.CurrentEntity.gameObject);
+                _tileDictionary.TryGetValue(tilePos, out GameTile tile);
+                _currentType = tile.CurrentEntity.EntityType;
+                List<GameTile> oneTypeTiles = new List<GameTile>() { tile };
+                List<Vector3Int> checkedTiles = new List<Vector3Int>() { tilePos };
+                CheckOneTypeRecursive(tilePos, oneTypeTiles, checkedTiles);
+                if (oneTypeTiles.Count >= 2)
+                {
+                    _turnAvaliable = false;
+                    for (int i = 0; i < oneTypeTiles.Count; i++)
+                    {
+                        StartCoroutine(WaitDeath(oneTypeTiles[i].CurrentEntity.gameObject, _deathWait * i));
+                    }
+                    StartCoroutine(TurnReset(_deathWait * (oneTypeTiles.Count - 1)));
+                }
             }
         }
+    }
+
+    private IEnumerator TurnReset(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        _turnAvaliable = true;
+    }
+
+    private IEnumerator WaitDeath(GameObject go,float seconds)
+    {   
+        yield return new WaitForSeconds(seconds);
+        Destroy(go);
     }
 
     private void CheckOneTypeRecursive(Vector3Int tilePos, List<GameTile> oneTypeTiles, List<Vector3Int> checkedTiles)
