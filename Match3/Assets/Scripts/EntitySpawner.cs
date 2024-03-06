@@ -16,6 +16,7 @@ public class EntitySpawner : MonoBehaviour
     private bool _turnAvaliable;
     private int _debugCount;
     private int _currentType;
+    [SerializeField] private int debugint;
     [SerializeField] private Dictionary<Vector3Int, GameTile> _tileDictionary = new Dictionary<Vector3Int, GameTile>();
 
     private void Awake()
@@ -40,6 +41,12 @@ public class EntitySpawner : MonoBehaviour
         {
             RePopulateTiles();
         }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            GameObject go = GameObject.Find(debugint.ToString());
+            if (go != null) Debug.Log("Alive");
+            else Debug.Log("Dead");
+        }
     }
 
     private void CheckTileData()
@@ -61,7 +68,7 @@ public class EntitySpawner : MonoBehaviour
                     _turnAvaliable = false;
                     for (int i = 0; i < oneTypeTiles.Count; i++)
                     {
-                        StartCoroutine(WaitDeath(oneTypeTiles[i].CurrentEntity.gameObject, _deathWait * i));
+                        StartCoroutine(WaitDeath(oneTypeTiles[i], _deathWait * i));
                     }
                     float time = _deathWait * (oneTypeTiles.Count - 1);
                     StartCoroutine(TurnReset(time));
@@ -105,10 +112,11 @@ public class EntitySpawner : MonoBehaviour
         }
     }
 
-    private IEnumerator WaitDeath(GameObject go, float seconds)
+    private IEnumerator WaitDeath(GameTile tile, float seconds)
     {
         yield return new WaitForSeconds(seconds);
-        Destroy(go);
+        Destroy(tile.CurrentEntity.gameObject);
+        tile.CurrentEntity = null;
     }
 
     private void CheckOneTypeRecursive(Vector3Int tilePos, List<GameTile> oneTypeTiles, List<Vector3Int> checkedTiles)
@@ -186,7 +194,7 @@ public class EntitySpawner : MonoBehaviour
 
         entity.EntityType = entityType;
         entity.SetSprite(_sprites[entityType]);
-        entity.Tile = tile;
+        entity.MyTile = tile;
         entity.Pos = tile.Pos;
 
         tile.CurrentEntity = entity;
