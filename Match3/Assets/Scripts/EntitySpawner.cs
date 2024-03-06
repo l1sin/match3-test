@@ -2,9 +2,12 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Xml;
 
 public class EntitySpawner : MonoBehaviour
 {
+    public static EntitySpawner Instance;
+
     [SerializeField] private Tilemap _tilemap;
     [SerializeField] private Camera _camera;
     [SerializeField] private GameObject _entityPrefab;
@@ -13,9 +16,12 @@ public class EntitySpawner : MonoBehaviour
     private bool _turnAvaliable;
     private int _debugCount;
     private int _currentType;
-
-
     [SerializeField] private Dictionary<Vector3Int, GameTile> _tileDictionary = new Dictionary<Vector3Int, GameTile>();
+
+    private void Awake()
+    {
+        Singleton();
+    }
 
     private void Start()
     {
@@ -28,6 +34,10 @@ public class EntitySpawner : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             CheckTileData();
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            MakeFall();
         }
     }
 
@@ -52,10 +62,43 @@ public class EntitySpawner : MonoBehaviour
                     {
                         StartCoroutine(WaitDeath(oneTypeTiles[i].CurrentEntity.gameObject, _deathWait * i));
                     }
-                    StartCoroutine(TurnReset(_deathWait * (oneTypeTiles.Count - 1)));
+                    float time = _deathWait * (oneTypeTiles.Count - 1);
+                    StartCoroutine(TurnReset(time));
+                    StartCoroutine(ActivateFall(oneTypeTiles, time + _deathWait));
                 }
             }
         }
+    }
+
+    private void MakeFall()
+    {
+        Vector3 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
+        Vector3Int tilePos = _tilemap.WorldToCell(mousePos);
+        GameTile tile = GetTile(tilePos);
+        if (tile != null && tile.CurrentEntity != null)
+        {
+            tile.CurrentEntity.Fall();
+        }
+    }
+
+    private void MakeFall(Vector3Int tilePos)
+    {
+        GameTile tile = GetTile(tilePos);
+        if (tile != null && tile.CurrentEntity != null)
+        {
+            tile.CurrentEntity.Fall();
+        }
+    }
+
+    public bool CheckTileBelow(Vector3Int tilePos)
+    {
+        tilePos += new Vector3Int(0, -1, 0);
+        GameTile tile = GetTile(tilePos);
+        if (tile != null && tile.CurrentEntity == null)
+        {
+            return true;
+        }
+        else return false;
     }
 
     private IEnumerator TurnReset(float seconds)
@@ -63,49 +106,47 @@ public class EntitySpawner : MonoBehaviour
         yield return new WaitForSeconds(seconds);
         _turnAvaliable = true;
     }
+    private IEnumerator ActivateFall(List<GameTile> tiles,float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        foreach (GameTile tile in tiles)
+        {
+            MakeFall(tile.Pos + Vector3Int.up);
+        }
+    }
 
-    private IEnumerator WaitDeath(GameObject go,float seconds)
-    {   
+    private IEnumerator WaitDeath(GameObject go, float seconds)
+    {
         yield return new WaitForSeconds(seconds);
         Destroy(go);
     }
 
     private void CheckOneTypeRecursive(Vector3Int tilePos, List<GameTile> oneTypeTiles, List<Vector3Int> checkedTiles)
     {
-        Vector3Int tileInCheck = tilePos + new Vector3Int(1, 0, 0);
+        Vector3Int tileInCheck = tilePos + Vector3Int.right;
         CheckIfIsOneType(tileInCheck, oneTypeTiles, checkedTiles);
 
-        tileInCheck = tilePos + new Vector3Int(0, 1, 0);
+        tileInCheck = tilePos + Vector3Int.up;
         CheckIfIsOneType(tileInCheck, oneTypeTiles, checkedTiles);
 
-        tileInCheck = tilePos + new Vector3Int(-1, 0, 0);
+        tileInCheck = tilePos + Vector3Int.left;
         CheckIfIsOneType(tileInCheck, oneTypeTiles, checkedTiles);
 
-        tileInCheck = tilePos + new Vector3Int(0, -1, 0);
+        tileInCheck = tilePos + Vector3Int.down;
         CheckIfIsOneType(tileInCheck, oneTypeTiles, checkedTiles);
     }
 
     private void CheckIfIsOneType(Vector3Int tileInCheck, List<GameTile> oneTypeTiles, List<Vector3Int> checkedTiles)
     {
-        if (_tilemap.GetTile(tileInCheck) != null && !checkedTiles.Contains(tileInCheck) )
+        if (_tilemap.GetTile(tileInCheck) != null && !checkedTiles.Contains(tileInCheck))
         {
-            _tileDictionary.TryGetValue(tileInCheck, out GameTile tile);
+            GameTile tile = GetTile(tileInCheck);
             checkedTiles.Add(tileInCheck);
-            if (tile.CurrentEntity.EntityType == _currentType)
+            if (tile.CurrentEntity != null && tile.CurrentEntity.EntityType == _currentType)
             {
                 oneTypeTiles.Add(tile);
                 CheckOneTypeRecursive(tileInCheck, oneTypeTiles, checkedTiles);
             }
-        }
-    }
-
-    private void DestroyEntity(Vector3Int tilePos)
-    {
-        if (_tilemap.GetTile(tilePos) != null)
-        {
-            _tileDictionary.TryGetValue(tilePos, out GameTile tile);
-            Destroy(tile.CurrentEntity.gameObject);
-            Debug.Log(tile.CurrentEntity.name);
         }
     }
 
@@ -132,7 +173,7 @@ public class EntitySpawner : MonoBehaviour
     {
         foreach (Vector3Int v in GetAllTilesPos(_tilemap))
         {
-            _tileDictionary.Add(v, new GameTile());
+            _tileDictionary.Add(v, new GameTile(v));
             CreateEntity(v);
         }
     }
@@ -145,7 +186,21 @@ public class EntitySpawner : MonoBehaviour
         byte entityType = (byte)Random.Range(0, _sprites.Length);
         en.EntityType = entityType;
         en.SetSprite(_sprites[entityType]);
-        _tileDictionary.TryGetValue(v, out GameTile tile);
+        GameTile tile = GetTile(v);
         tile.CurrentEntity = en;
+        en.Tile = tile;
+        en.Pos = v;
+    }
+
+    private void Singleton()
+    {
+        if (Instance != null && Instance != this) Destroy(Instance.gameObject);
+        else Instance = this;
+    }
+
+    public GameTile GetTile(Vector3Int v)
+    {
+        _tileDictionary.TryGetValue(v, out GameTile tile);
+        return tile;
     }
 }
