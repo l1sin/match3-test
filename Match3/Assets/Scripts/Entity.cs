@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using DG.Tweening;
 
 public class Entity : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class Entity : MonoBehaviour
     [SerializeField] public GameTile Tile;
     public Vector3Int Pos;
     private static float _callTime = 0.01f;
+    private static float _travelTime = 0.1f;
     private bool _canCallUpperToFall = true;
 
     public void SetSprite(Sprite sprite)
@@ -22,11 +24,15 @@ public class Entity : MonoBehaviour
         {
             Tile.CurrentEntity = null;
             Tile = null;
-            transform.position += Vector3Int.down;
+            //transform.position += Vector3Int.down;
             Pos += Vector3Int.down;
             Tile = EntitySpawner.Instance.GetTile(Pos);
             Tile.CurrentEntity = this;
             Fall();
+        }
+        else
+        {
+            transform.DOMove(Pos, _travelTime);
         }
     }
 
