@@ -2,11 +2,12 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using System.Xml;
+using DG.Tweening;
 
 public class EntitySpawner : MonoBehaviour
 {
     public static EntitySpawner Instance;
+    public static readonly Vector3 half = new Vector3(0.5f, 0.5f, 0);
 
     [SerializeField] private Tilemap _tilemap;
     [SerializeField] private Camera _camera;
@@ -21,6 +22,7 @@ public class EntitySpawner : MonoBehaviour
 
     private void Awake()
     {
+        DOTween.Init();
         Singleton();
     }
 
@@ -40,12 +42,6 @@ public class EntitySpawner : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             RePopulateTiles();
-        }
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            GameObject go = GameObject.Find(debugint.ToString());
-            if (go != null) Debug.Log("Alive");
-            else Debug.Log("Dead");
         }
     }
 
@@ -68,11 +64,11 @@ public class EntitySpawner : MonoBehaviour
                     _turnAvaliable = false;
                     for (int i = 0; i < oneTypeTiles.Count; i++)
                     {
-                        StartCoroutine(WaitDeath(oneTypeTiles[i], _deathWait * i));
+                        StartCoroutine(WaitDeath(oneTypeTiles[i], _deathWait * (i + 1)));
                     }
-                    float time = _deathWait * (oneTypeTiles.Count - 1);
+                    float time = _deathWait * (oneTypeTiles.Count);
                     StartCoroutine(TurnReset(time));
-                    StartCoroutine(ActivateFall(oneTypeTiles, time + _deathWait));
+                    StartCoroutine(ActivateFall(oneTypeTiles, time + 0.15f));
                 }
             }
         }
@@ -191,7 +187,7 @@ public class EntitySpawner : MonoBehaviour
 
     private void InstantiateEntity(GameTile tile)
     {
-        GameObject newObject = Instantiate(_entityPrefab, tile.Pos, Quaternion.identity);
+        GameObject newObject = Instantiate(_entityPrefab, tile.Pos + half, Quaternion.identity);
         newObject.name = _debugCount++.ToString();
         Entity entity = newObject.GetComponent<Entity>();
         byte entityType = (byte)Random.Range(0, _sprites.Length);
@@ -206,7 +202,7 @@ public class EntitySpawner : MonoBehaviour
 
     public Entity InstantiateEntityCelling(Vector3Int pos)
     {
-        GameObject newObject = Instantiate(_entityPrefab, pos, Quaternion.identity);
+        GameObject newObject = Instantiate(_entityPrefab, pos + half, Quaternion.identity);
         newObject.name = _debugCount++.ToString();
         Entity entity = newObject.GetComponent<Entity>();
         byte entityType = (byte)Random.Range(0, _sprites.Length);

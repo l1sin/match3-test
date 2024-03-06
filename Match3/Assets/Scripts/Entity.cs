@@ -15,11 +15,23 @@ public class Entity : MonoBehaviour
     private void Start()
     {
         _canCallUpperToFall = true;
+        Pop();
     }
 
     public void SetSprite(Sprite sprite)
     {
         _sr.sprite = sprite;
+    }
+
+    private void Pop()
+    {
+        transform.localScale = Vector3.zero;
+        transform.DOScale(Vector3.one, _travelTime);
+    }
+
+    public void Die(float seconds)
+    {
+        transform.DOScale(Vector3.zero, seconds);
     }
 
     public void Fall()
@@ -37,7 +49,7 @@ public class Entity : MonoBehaviour
         else
         {
             _canCallUpperToFall = true;
-            transform.DOMove(Pos, _travelTime);
+            transform.DOMove(Pos + EntitySpawner.half, _travelTime);
         }
     }
 
@@ -46,7 +58,7 @@ public class Entity : MonoBehaviour
         Pos += Vector3Int.down;
         MyTile = EntitySpawner.Instance.GetTile(Pos);
         MyTile.CurrentEntity = this;
-        transform.DOMove(Pos, _travelTime * 0.5f);
+        transform.DOMove(Pos + EntitySpawner.half, _travelTime * 0.5f);
         Fall();
     }
 
