@@ -24,9 +24,9 @@ public class Entity : MonoBehaviour
 
     public void Fall()
     {
-        if (_canCallUpperToFall) StartCoroutine(CallUpperTile());
         if (EntitySpawner.Instance.CheckTileBelow(Pos))
         {
+            if (_canCallUpperToFall) StartCoroutine(CallUpperTile());
             MyTile.CurrentEntity = null;
             MyTile = null;
             Pos += Vector3Int.down;
@@ -41,11 +41,25 @@ public class Entity : MonoBehaviour
         }
     }
 
+    public void MoveDown()
+    {
+        Pos += Vector3Int.down;
+        MyTile = EntitySpawner.Instance.GetTile(Pos);
+        MyTile.CurrentEntity = this;
+        transform.DOMove(Pos, _travelTime * 0.5f);
+        Fall();
+    }
+
     private IEnumerator CallUpperTile()
     {
         _canCallUpperToFall = false;
-        GameTile otherTile = EntitySpawner.Instance.GetTile(Pos + Vector3Int.up);
+        Vector3Int pos = Pos + Vector3Int.up;
+        GameTile otherTile = EntitySpawner.Instance.GetTile(pos);
         yield return new WaitForSeconds(_callTime);
         if (otherTile != null && otherTile.CurrentEntity != null) otherTile.CurrentEntity.Fall();
+        else if (otherTile == null)
+        {
+            EntitySpawner.Instance.InstantiateEntityCelling(pos);
+        }
     }
 }

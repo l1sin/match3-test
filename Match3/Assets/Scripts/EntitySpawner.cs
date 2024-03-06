@@ -85,6 +85,10 @@ public class EntitySpawner : MonoBehaviour
         {
             tile.CurrentEntity.Fall();
         }
+        else if (tile == null)
+        {
+            InstantiateEntityCelling(tilePos);
+        }
     }
 
     public bool CheckTileBelow(Vector3Int tilePos)
@@ -198,7 +202,21 @@ public class EntitySpawner : MonoBehaviour
         entity.Pos = tile.Pos;
 
         tile.CurrentEntity = entity;
+    }
 
+    public Entity InstantiateEntityCelling(Vector3Int pos)
+    {
+        GameObject newObject = Instantiate(_entityPrefab, pos, Quaternion.identity);
+        newObject.name = _debugCount++.ToString();
+        Entity entity = newObject.GetComponent<Entity>();
+        byte entityType = (byte)Random.Range(0, _sprites.Length);
+
+        entity.EntityType = entityType;
+        entity.SetSprite(_sprites[entityType]);
+        entity.Pos = pos;
+        entity.MoveDown();
+
+        return entity;
     }
 
     private void Singleton()
