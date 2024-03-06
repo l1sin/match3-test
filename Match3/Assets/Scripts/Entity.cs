@@ -9,7 +9,6 @@ public class Entity : MonoBehaviour
     public Vector3Int Pos;
     private static float _callTime = 0.01f;
     private bool _canCallUpperToFall = true;
-    private bool _isFalling = false;
 
     public void SetSprite(Sprite sprite)
     {
@@ -18,7 +17,6 @@ public class Entity : MonoBehaviour
 
     public void Fall()
     {
-        _isFalling = true;
         if (_canCallUpperToFall) StartCoroutine(CallUpperTile());
         if (EntitySpawner.Instance.CheckTileBelow(Pos))
         {
@@ -30,7 +28,6 @@ public class Entity : MonoBehaviour
             Tile.CurrentEntity = this;
             Fall();
         }
-        else _isFalling = false;
     }
 
     private IEnumerator CallUpperTile()
