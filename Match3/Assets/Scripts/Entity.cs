@@ -24,7 +24,6 @@ public class Entity : MonoBehaviour
         {
             Tile.CurrentEntity = null;
             Tile = null;
-            //transform.position += Vector3Int.down;
             Pos += Vector3Int.down;
             Tile = EntitySpawner.Instance.GetTile(Pos);
             Tile.CurrentEntity = this;

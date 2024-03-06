@@ -26,7 +26,8 @@ public class EntitySpawner : MonoBehaviour
     private void Start()
     {
         _turnAvaliable = true;
-        PopulateTiles();
+        CreateTiles();
+        RePopulateTiles();
     }
 
     private void Update()
@@ -35,9 +36,9 @@ public class EntitySpawner : MonoBehaviour
         {
             CheckTileData();
         }
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            MakeFall();
+            RePopulateTiles();
         }
     }
 
@@ -67,17 +68,6 @@ public class EntitySpawner : MonoBehaviour
                     StartCoroutine(ActivateFall(oneTypeTiles, time + _deathWait));
                 }
             }
-        }
-    }
-
-    private void MakeFall()
-    {
-        Vector3 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
-        Vector3Int tilePos = _tilemap.WorldToCell(mousePos);
-        GameTile tile = GetTile(tilePos);
-        if (tile != null && tile.CurrentEntity != null)
-        {
-            tile.CurrentEntity.Fall();
         }
     }
 
@@ -169,27 +159,38 @@ public class EntitySpawner : MonoBehaviour
         return newList;
     }
 
-    private void PopulateTiles()
+    private void CreateTiles()
     {
         foreach (Vector3Int v in GetAllTilesPos(_tilemap))
         {
             _tileDictionary.Add(v, new GameTile(v));
-            CreateEntity(v);
         }
     }
 
-    private void CreateEntity(Vector3Int v)
+    private void RePopulateTiles()
     {
-        GameObject go = Instantiate(_entityPrefab, v, Quaternion.identity);
-        go.name = _debugCount++.ToString();
-        Entity en = go.GetComponent<Entity>();
+        foreach (KeyValuePair<Vector3Int, GameTile> pair in _tileDictionary)
+        {
+            GameTile tile = pair.Value;
+            if (tile.CurrentEntity != null) Destroy(tile.CurrentEntity.gameObject);
+            InstantiateEntity(tile);
+        }
+    }
+
+    private void InstantiateEntity(GameTile tile)
+    {
+        GameObject newObject = Instantiate(_entityPrefab, tile.Pos, Quaternion.identity);
+        newObject.name = _debugCount++.ToString();
+        Entity entity = newObject.GetComponent<Entity>();
         byte entityType = (byte)Random.Range(0, _sprites.Length);
-        en.EntityType = entityType;
-        en.SetSprite(_sprites[entityType]);
-        GameTile tile = GetTile(v);
-        tile.CurrentEntity = en;
-        en.Tile = tile;
-        en.Pos = v;
+
+        entity.EntityType = entityType;
+        entity.SetSprite(_sprites[entityType]);
+        entity.Tile = tile;
+        entity.Pos = tile.Pos;
+
+        tile.CurrentEntity = entity;
+
     }
 
     private void Singleton()
