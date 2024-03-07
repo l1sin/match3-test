@@ -9,7 +9,9 @@ public class Entity : MonoBehaviour
     [SerializeField] public GameTile MyTile;
     public Vector3Int Pos;
     private static float _callTime = 0;
-    private static float _travelTime = 1f;
+    private static float _travelTime = 0.1f;
+    private static float _animTime = 0.1f;
+    private static float _minSizeY = 0.85f;
     private bool _canCallUpperToFall = true;
     public bool Spawned;
 
@@ -37,7 +39,16 @@ public class Entity : MonoBehaviour
 
     public void Die(float seconds)
     {
-        transform.DOScale(Vector3.zero, seconds);
+        transform.DORotate(new Vector3(0, 0, 180), seconds).OnComplete(() => Destroy(gameObject));
+        transform.DOScale(Vector3.zero, seconds).OnComplete(() => Destroy(gameObject));
+    }
+
+    public void EndFall()
+    {
+        Sequence mySequence = DOTween.Sequence();
+
+        mySequence.Append(transform.DOScaleY(_minSizeY, _animTime * 0.5f));
+        mySequence.Append(transform.DOScaleY(1f, _animTime * 0.5f));
     }
 
     public void Fall()
@@ -52,6 +63,7 @@ public class Entity : MonoBehaviour
         else
         {
             _canCallUpperToFall = true;
+            EndFall();
         }
     }
 

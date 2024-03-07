@@ -70,8 +70,8 @@ public class EntitySpawner : MonoBehaviour
                         StartCoroutine(WaitDeath(oneTypeTiles[i], _deathWait * (i + 1)));
                     }
                     float time = _deathWait * (oneTypeTiles.Count); 
-                    StartCoroutine(ActivateFall(oneTypeTiles, time));
-                    StartCoroutine(TurnReset(time + 0.15f));
+                    StartCoroutine(ActivateFall(oneTypeTiles, time + _deathWait));
+                    StartCoroutine(TurnReset(time + _deathWait));
                 }
             }
         }
@@ -135,7 +135,7 @@ public class EntitySpawner : MonoBehaviour
     private IEnumerator WaitDeath(GameTile tile, float seconds)
     {
         yield return new WaitForSeconds(seconds);
-        Destroy(tile.CurrentEntity.gameObject);
+        tile.CurrentEntity.Die(_deathWait);
         tile.CurrentEntity = null;
     }
 
