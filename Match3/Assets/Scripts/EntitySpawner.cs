@@ -19,6 +19,7 @@ public class EntitySpawner : MonoBehaviour
     private int _currentType;
     [SerializeField] private int debugint;
     [SerializeField] private Dictionary<Vector3Int, GameTile> _tileDictionary = new Dictionary<Vector3Int, GameTile>();
+    [SerializeField] private float _timeScale;
 
     private void Awake()
     {
@@ -43,6 +44,7 @@ public class EntitySpawner : MonoBehaviour
         {
             RePopulateTiles();
         }
+        Time.timeScale = _timeScale;
     }
 
     private void CheckTileData()
@@ -66,9 +68,9 @@ public class EntitySpawner : MonoBehaviour
                     {
                         StartCoroutine(WaitDeath(oneTypeTiles[i], _deathWait * (i + 1)));
                     }
-                    float time = _deathWait * (oneTypeTiles.Count);
-                    StartCoroutine(TurnReset(time));
-                    StartCoroutine(ActivateFall(oneTypeTiles, time + 0.15f));
+                    float time = _deathWait * (oneTypeTiles.Count); 
+                    StartCoroutine(ActivateFall(oneTypeTiles, time));
+                    StartCoroutine(TurnReset(time + 0.15f));
                 }
             }
         }

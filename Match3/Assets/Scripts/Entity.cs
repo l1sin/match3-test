@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using DG.Tweening;
+using static UnityEditor.PlayerSettings;
 
 public class Entity : MonoBehaviour
 {
@@ -8,12 +9,15 @@ public class Entity : MonoBehaviour
     [SerializeField] public byte EntityType;
     [SerializeField] public GameTile MyTile;
     public Vector3Int Pos;
-    private static float _callTime = 0.01f;
-    private static float _travelTime = 0.1f;
+    private static float _callTime = 0;
+    private static float _travelTime = 1f;
     private bool _canCallUpperToFall = true;
+    private int _distance;
+    [SerializeField] private bool _spawned;
 
     private void Start()
     {
+        _distance = 0;
         _canCallUpperToFall = true;
         Pop();
     }
@@ -26,7 +30,12 @@ public class Entity : MonoBehaviour
     private void Pop()
     {
         transform.localScale = Vector3.zero;
-        transform.DOScale(Vector3.one, _travelTime);
+        transform.DOScale(Vector3.one, _travelTime).OnComplete(Spawned);
+    }
+
+    private void Spawned()
+    {
+        _spawned = true;
     }
 
     public void Die(float seconds)
@@ -38,6 +47,7 @@ public class Entity : MonoBehaviour
     {
         if (EntitySpawner.Instance.CheckTileBelow(Pos))
         {
+            _distance++;
             if (_canCallUpperToFall) StartCoroutine(CallUpperTile());
             MyTile.CurrentEntity = null;
             MyTile = null;
@@ -49,16 +59,18 @@ public class Entity : MonoBehaviour
         else
         {
             _canCallUpperToFall = true;
-            transform.DOMove(Pos + EntitySpawner.half, _travelTime);
+            transform.DOMove(Pos + EntitySpawner.half, _travelTime * _distance).SetEase(Ease.Linear);
+            _distance = 0;
         }
     }
 
     public void MoveDown()
     {
+        _distance++;
         Pos += Vector3Int.down;
         MyTile = EntitySpawner.Instance.GetTile(Pos);
         MyTile.CurrentEntity = this;
-        transform.DOMove(Pos + EntitySpawner.half, _travelTime * 0.5f);
+        //transform.DOMove(Pos + EntitySpawner.half, _travelTime * _distance);
         Fall();
     }
 
@@ -71,7 +83,22 @@ public class Entity : MonoBehaviour
         if (otherTile != null && otherTile.CurrentEntity != null) otherTile.CurrentEntity.Fall();
         else if (otherTile == null)
         {
-            EntitySpawner.Instance.InstantiateEntityCelling(pos);
+            if (_spawned)
+            {
+                StartCoroutine(SpawnEntity(pos, 0));
+            }
+            else
+            {
+                StartCoroutine(SpawnEntity(pos, _travelTime));
+            }
+            
+            //EntitySpawner.Instance.InstantiateEntityCelling(pos);
         }
+    }
+
+    private IEnumerator SpawnEntity(Vector3Int pos, float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        EntitySpawner.Instance.InstantiateEntityCelling(pos);
     }
 }
