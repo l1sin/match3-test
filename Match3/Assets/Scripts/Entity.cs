@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using DG.Tweening;
-using static UnityEditor.PlayerSettings;
 
 public class Entity : MonoBehaviour
 {
@@ -12,12 +11,10 @@ public class Entity : MonoBehaviour
     private static float _callTime = 0;
     private static float _travelTime = 1f;
     private bool _canCallUpperToFall = true;
-    private int _distance;
-    [SerializeField] private bool _spawned;
+    public bool Spawned;
 
     private void Start()
     {
-        _distance = 0;
         _canCallUpperToFall = true;
         Pop();
     }
@@ -30,12 +27,12 @@ public class Entity : MonoBehaviour
     private void Pop()
     {
         transform.localScale = Vector3.zero;
-        transform.DOScale(Vector3.one, _travelTime).OnComplete(Spawned);
+        transform.DOScale(Vector3.one, _travelTime).OnComplete(SetSpawned);
     }
 
-    private void Spawned()
+    private void SetSpawned()
     {
-        _spawned = true;
+        Spawned = true;
     }
 
     public void Die(float seconds)
@@ -47,31 +44,23 @@ public class Entity : MonoBehaviour
     {
         if (EntitySpawner.Instance.CheckTileBelow(Pos))
         {
-            _distance++;
             if (_canCallUpperToFall) StartCoroutine(CallUpperTile());
             MyTile.CurrentEntity = null;
             MyTile = null;
-            Pos += Vector3Int.down;
-            MyTile = EntitySpawner.Instance.GetTile(Pos);
-            MyTile.CurrentEntity = this;
-            Fall();
+            MoveDown();
         }
         else
         {
             _canCallUpperToFall = true;
-            transform.DOMove(Pos + EntitySpawner.half, _travelTime * _distance).SetEase(Ease.Linear);
-            _distance = 0;
         }
     }
 
     public void MoveDown()
     {
-        _distance++;
         Pos += Vector3Int.down;
         MyTile = EntitySpawner.Instance.GetTile(Pos);
         MyTile.CurrentEntity = this;
-        //transform.DOMove(Pos + EntitySpawner.half, _travelTime * _distance);
-        Fall();
+        transform.DOMove(Pos + EntitySpawner.half, _travelTime).SetEase(Ease.Linear).OnComplete(Fall);
     }
 
     private IEnumerator CallUpperTile()
@@ -80,10 +69,10 @@ public class Entity : MonoBehaviour
         Vector3Int pos = Pos + Vector3Int.up;
         GameTile otherTile = EntitySpawner.Instance.GetTile(pos);
         yield return new WaitForSeconds(_callTime);
-        if (otherTile != null && otherTile.CurrentEntity != null) otherTile.CurrentEntity.Fall();
+        if (otherTile != null && otherTile.CurrentEntity != null && otherTile.CurrentEntity.Spawned) otherTile.CurrentEntity.Fall();
         else if (otherTile == null)
         {
-            if (_spawned)
+            if (Spawned)
             {
                 StartCoroutine(SpawnEntity(pos, 0));
             }
@@ -91,8 +80,6 @@ public class Entity : MonoBehaviour
             {
                 StartCoroutine(SpawnEntity(pos, _travelTime));
             }
-            
-            //EntitySpawner.Instance.InstantiateEntityCelling(pos);
         }
     }
 

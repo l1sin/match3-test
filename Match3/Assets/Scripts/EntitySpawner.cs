@@ -14,6 +14,7 @@ public class EntitySpawner : MonoBehaviour
     [SerializeField] private GameObject _entityPrefab;
     [SerializeField] private Sprite[] _sprites;
     [SerializeField] private float _deathWait;
+    [SerializeField] private int _comboAmount;
     private bool _turnAvaliable;
     private int _debugCount;
     private int _currentType;
@@ -61,7 +62,7 @@ public class EntitySpawner : MonoBehaviour
                 List<GameTile> oneTypeTiles = new List<GameTile>() { tile };
                 List<Vector3Int> checkedTiles = new List<Vector3Int>() { tilePos };
                 CheckOneTypeRecursive(tilePos, oneTypeTiles, checkedTiles);
-                if (oneTypeTiles.Count >= 2)
+                if (oneTypeTiles.Count >= _comboAmount)
                 {
                     _turnAvaliable = false;
                     for (int i = 0; i < oneTypeTiles.Count; i++)
@@ -108,10 +109,27 @@ public class EntitySpawner : MonoBehaviour
     private IEnumerator ActivateFall(List<GameTile> tiles,float seconds)
     {
         yield return new WaitForSeconds(seconds);
+        tiles.Sort();
+        tiles.Reverse();
+        DeleteLowerTiles(tiles);
+        tiles.Reverse();
         foreach (GameTile tile in tiles)
         {
             MakeFall(tile.Pos + Vector3Int.up);
         }
+    }
+
+    private List<GameTile> DeleteLowerTiles(List<GameTile> tiles)
+    {
+        for (int i = tiles.Count - 1; i >= 0; i--)
+        {
+            GameTile otherTile = GetTile(tiles[i].Pos + Vector3Int.up);
+            if (tiles.Contains(otherTile))
+            {
+                tiles.RemoveAt(i);
+            }
+        }
+        return tiles;
     }
 
     private IEnumerator WaitDeath(GameTile tile, float seconds)
@@ -190,7 +208,7 @@ public class EntitySpawner : MonoBehaviour
     private void InstantiateEntity(GameTile tile)
     {
         GameObject newObject = Instantiate(_entityPrefab, tile.Pos + half, Quaternion.identity);
-        newObject.name = _debugCount++.ToString();
+        newObject.name = "Tile" + _debugCount++.ToString();
         Entity entity = newObject.GetComponent<Entity>();
         byte entityType = (byte)Random.Range(0, _sprites.Length);
 
@@ -205,7 +223,7 @@ public class EntitySpawner : MonoBehaviour
     public Entity InstantiateEntityCelling(Vector3Int pos)
     {
         GameObject newObject = Instantiate(_entityPrefab, pos + half, Quaternion.identity);
-        newObject.name = _debugCount++.ToString();
+        newObject.name = "Tile" + _debugCount++.ToString();
         Entity entity = newObject.GetComponent<Entity>();
         byte entityType = (byte)Random.Range(0, _sprites.Length);
 
