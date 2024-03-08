@@ -53,6 +53,7 @@ public class Entity : MonoBehaviour
 
     public void Die(float seconds)
     {
+        LevelController.Instance.GainScore();
         Instantiate(_particleSystem, transform.position, Quaternion.identity);
         transform.DORotate(new Vector3(0, 0, 180), seconds).OnComplete(() => Destroy(gameObject));
         transform.DOScale(Vector3.zero, seconds).OnComplete(() => Destroy(gameObject));

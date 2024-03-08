@@ -71,7 +71,9 @@ public class EntitySpawner : MonoBehaviour
             GameTile tile = GetTile(tilePos);
 
             if (tile != null && tile.CurrentObstacle == null)
-            { 
+            {
+                LevelController.Instance.DoTurn();
+
                 _currentType = tile.CurrentEntity.EntityType;
                 List<GameTile> oneTypeTiles = new List<GameTile>() { tile };
                 List<Vector3Int> checkedTiles = new List<Vector3Int>() { tilePos };
