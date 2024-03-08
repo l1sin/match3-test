@@ -14,7 +14,7 @@ public class EntitySpawner : MonoBehaviour
     [SerializeField] private Camera _camera;
     [SerializeField] private GameObject _entityPrefab;
     [SerializeField] private Sprite[] _sprites;
-    [SerializeField] private float _deathWait;
+    public float DeathWait = 0.3f;
     [SerializeField] private int _comboAmount;
     private bool _turnAvaliable;
     private int _debugCount;
@@ -67,14 +67,15 @@ public class EntitySpawner : MonoBehaviour
         {
             Vector3 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
             Vector3Int tilePos = _tilemap.WorldToCell(mousePos);
+            GameTile tile = GetTile(tilePos);
 
-            if (_tilemap.GetTile(tilePos) != null)
-            {
-                _tileDictionary.TryGetValue(tilePos, out GameTile tile);
+            if (tile != null && tile.CurrentObstacle == null)
+            { 
                 _currentType = tile.CurrentEntity.EntityType;
                 List<GameTile> oneTypeTiles = new List<GameTile>() { tile };
                 List<Vector3Int> checkedTiles = new List<Vector3Int>() { tilePos };
                 CheckOneTypeRecursive(tilePos, oneTypeTiles, checkedTiles);
+                List<GameTile> adjacentTiles = GetAdjacentTiles(oneTypeTiles);
                 if (oneTypeTiles.Count >= _comboAmount)
                 {
                     _turnAvaliable = false;
@@ -82,11 +83,47 @@ public class EntitySpawner : MonoBehaviour
                     {
                         DamageEntity(oneTypeTiles[i]);
                     }
-                    StartCoroutine(ActivateFall(oneTypeTiles,_deathWait));
-                    StartCoroutine(TurnReset(_deathWait + 0.2f));
+
+                    for (int i = 0; i < adjacentTiles.Count; i++)
+                    {
+                        DamageObstacle(adjacentTiles[i]);
+                    }
+
+                    StartCoroutine(ActivateFall(oneTypeTiles,DeathWait));
+                    StartCoroutine(TurnReset(DeathWait + 0.2f));
                 }
             }
         }
+    }
+
+    private List<GameTile> GetAdjacentTiles(List<GameTile> tiles)
+    {
+        List<GameTile> adjacentTiles = new List<GameTile>();
+        foreach (GameTile tile in tiles)
+        {
+            Vector3Int pos = tile.Pos;
+
+            GameTile tileInCheck = GetTile(pos + Vector3Int.right);
+            if (CheckIfAdjacent(tileInCheck, tiles) && !adjacentTiles.Contains(tileInCheck)) adjacentTiles.Add(tileInCheck);
+
+            tileInCheck = GetTile(pos + Vector3Int.up);
+            if (CheckIfAdjacent(tileInCheck, tiles) && !adjacentTiles.Contains(tileInCheck)) adjacentTiles.Add(tileInCheck);
+
+            tileInCheck = GetTile(pos + Vector3Int.left);
+            if (CheckIfAdjacent(tileInCheck, tiles) && !adjacentTiles.Contains(tileInCheck)) adjacentTiles.Add(tileInCheck);
+
+            tileInCheck = GetTile(pos + Vector3Int.down);
+            if (CheckIfAdjacent(tileInCheck, tiles) && !adjacentTiles.Contains(tileInCheck)) adjacentTiles.Add(tileInCheck);
+        }
+        Debug.Log(adjacentTiles.Count);
+        return adjacentTiles;
+    }
+
+    private bool CheckIfAdjacent(GameTile tile, List<GameTile> nonAdjacentTiles)
+    {
+        if (tile == null) return false;
+        if (nonAdjacentTiles.Contains(tile)) return false;
+        else return true;
     }
 
     private void MakeFall(Vector3Int tilePos)
@@ -149,9 +186,14 @@ public class EntitySpawner : MonoBehaviour
         if (tile.CurrentObstacle != null) tile.CurrentObstacle.Damage();
         else
         {
-            tile.CurrentEntity.Die(_deathWait);
+            tile.CurrentEntity.Die(DeathWait);
             tile.CurrentEntity = null;
         } 
+    }
+
+    private void DamageObstacle(GameTile tile)
+    {
+        if (tile.CurrentObstacle != null) tile.CurrentObstacle.Damage();
     }
 
     private void CheckOneTypeRecursive(Vector3Int tilePos, List<GameTile> oneTypeTiles, List<Vector3Int> checkedTiles)

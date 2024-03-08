@@ -1,4 +1,5 @@
 using UnityEngine;
+using DG.Tweening;
 
 public class Obstacle : MonoBehaviour
 {
@@ -6,6 +7,8 @@ public class Obstacle : MonoBehaviour
     public Vector3Int Pos;
     public GameTile MyTile;
     [SerializeField] private SpriteRenderer _spriteRenderer;
+    private static float s_maxScale = 1.25f;
+    private static Color s_endColor = new Color(1, 1, 1, 0);
 
     public void ConnectToTile()
     {
@@ -27,6 +30,8 @@ public class Obstacle : MonoBehaviour
     {
         EntitySpawner.Instance.Obstacles.Remove(this);
         MyTile.CurrentObstacle = null;
-        Destroy(gameObject);
+        MyTile.CurrentEntity.Fall();
+        transform.DOScale(s_maxScale, EntitySpawner.Instance.DeathWait).OnComplete(() => Destroy(gameObject));
+        _spriteRenderer.DOColor(s_endColor, EntitySpawner.Instance.DeathWait).OnComplete(() => Destroy(gameObject));
     }
 }
