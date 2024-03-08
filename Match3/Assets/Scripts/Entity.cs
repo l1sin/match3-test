@@ -1,26 +1,38 @@
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
-using DG.Tweening;
 
 public class Entity : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer _sr;
-    [SerializeField] public byte EntityType;
-    [SerializeField] public GameTile MyTile;
-    [SerializeField] private GameObject _particleSystem;
+    [Header("Public values")]
     public Vector3Int Pos;
-    private static float s_callTime = 0;
-    private static float s_travelTime = 0.1f;
-    private static float s_animTime = 0.1f;
-    private static float s_minSizeY = 0.85f;
+    public byte EntityType;
+    public GameTile MyTile;
+
+    [Header("Prefab setting")]
+    [SerializeField] private SpriteRenderer _sr;
+    [SerializeField] private GameObject _particleSystem;
+    [SerializeField] private float _callTime = 0f;
+    [SerializeField] private float _travelTime = 0.1f;
+    [SerializeField] private float _animTime = 0.1f;
+    [SerializeField] private float _minSizeY = 0.85f;
+
+    [Header("System values")]
     private bool _canCallUpperToFall = true;
-    public bool Spawned;
-    [SerializeField] private int _distanceTraveled;
+    private bool _spawned = false;
+    private int _distanceTraveled = 0;
 
     private void Start()
     {
-        _canCallUpperToFall = true;
+        Init();
         Pop();
+    }
+
+    private void Init()
+    {
+        _canCallUpperToFall = true;
+        _spawned = false;
+        _distanceTraveled = 0;
     }
 
     public void SetSprite(Sprite sprite)
@@ -31,12 +43,12 @@ public class Entity : MonoBehaviour
     private void Pop()
     {
         transform.localScale = Vector3.zero;
-        transform.DOScale(Vector3.one, s_travelTime).OnComplete(SetSpawned);
+        transform.DOScale(Vector3.one, _travelTime).OnComplete(SetSpawned);
     }
 
     private void SetSpawned()
     {
-        Spawned = true;
+        _spawned = true;
     }
 
     public void Die(float seconds)
@@ -51,9 +63,9 @@ public class Entity : MonoBehaviour
         if (_distanceTraveled > 0)
         {
             Sequence mySequence = DOTween.Sequence();
-            mySequence.Append(transform.DOScaleY(s_minSizeY, s_animTime * 0.5f));
-            mySequence.Append(transform.DOScaleY(1f, s_animTime * 0.5f));
-        } 
+            mySequence.Append(transform.DOScaleY(_minSizeY, _animTime * 0.5f));
+            mySequence.Append(transform.DOScaleY(1f, _animTime * 0.5f));
+        }
 
         _distanceTraveled = 0;
         _canCallUpperToFall = true;
@@ -70,7 +82,7 @@ public class Entity : MonoBehaviour
             MoveDown();
         }
         else
-        { 
+        {
             EndFall();
         }
     }
@@ -81,7 +93,7 @@ public class Entity : MonoBehaviour
         Pos += Vector3Int.down;
         MyTile = EntitySpawner.Instance.GetTile(Pos);
         MyTile.CurrentEntity = this;
-        transform.DOMove(Pos + EntitySpawner.half, s_travelTime).SetEase(Ease.Linear).OnComplete(Fall);
+        transform.DOMove(Pos + EntitySpawner.half, _travelTime).SetEase(Ease.Linear).OnComplete(Fall);
     }
 
     private IEnumerator CallUpperTile()
@@ -89,22 +101,22 @@ public class Entity : MonoBehaviour
         _canCallUpperToFall = false;
         Vector3Int pos = Pos + Vector3Int.up;
         GameTile otherTile = EntitySpawner.Instance.GetTile(pos);
-        yield return new WaitForSeconds(s_callTime);
-        if (otherTile != null && otherTile.CurrentEntity != null && otherTile.CurrentEntity.Spawned) otherTile.CurrentEntity.Fall();
+        yield return new WaitForSeconds(_callTime);
+        if (otherTile != null && otherTile.CurrentEntity != null && otherTile.CurrentEntity._spawned) otherTile.CurrentEntity.Fall();
         else if (otherTile == null)
         {
-            if (Spawned)
+            if (_spawned)
             {
-                StartCoroutine(SpawnEntity(pos, 0));
+                StartCoroutine(InstantiateEntityCelling(pos, 0));
             }
             else
             {
-                StartCoroutine(SpawnEntity(pos, s_travelTime));
+                StartCoroutine(InstantiateEntityCelling(pos, _travelTime));
             }
         }
     }
 
-    private IEnumerator SpawnEntity(Vector3Int pos, float seconds)
+    private IEnumerator InstantiateEntityCelling(Vector3Int pos, float seconds)
     {
         yield return new WaitForSeconds(seconds);
         EntitySpawner.Instance.InstantiateEntityCelling(pos);

@@ -97,14 +97,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 838c3ef1f974b7a439ca8204cdf563f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sr: {fileID: 5083918425280562453}
+  Pos: {x: 0, y: 0, z: 0}
   EntityType: 0
   MyTile:
     CurrentEntity: {fileID: 0}
     Pos: {x: 0, y: 0, z: 0}
     CurrentObstacle: {fileID: 0}
+  Int: 42
+  _sr: {fileID: 5083918425280562453}
   _particleSystem: {fileID: 9218751258326350366, guid: 900e995724a94bf4283424154dfaee66,
     type: 3}
-  Pos: {x: 0, y: 0, z: 0}
-  Spawned: 0
-  _distanceTraveled: 0
+  s_callTime: 0
+  s_travelTime: 0.1
+  s_animTime: 0.1
+  s_minSizeY: 0.85
