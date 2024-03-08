@@ -6,6 +6,7 @@ public class GameTile: IComparable<GameTile>
 {
     public Entity CurrentEntity;
     public Vector3Int Pos;
+    public Obstacle CurrentObstacle;
 
     public GameTile(Vector3Int pos)
     {

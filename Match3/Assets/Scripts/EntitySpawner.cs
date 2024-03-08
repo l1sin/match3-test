@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using DG.Tweening;
+using System.Linq;
 
 public class EntitySpawner : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class EntitySpawner : MonoBehaviour
     [SerializeField] private int debugint;
     [SerializeField] private Dictionary<Vector3Int, GameTile> _tileDictionary = new Dictionary<Vector3Int, GameTile>();
     [SerializeField] private float _timeScale;
+    [SerializeField] private GameObject _obstcleTilemap;
+    public List<Obstacle> Obstacles;
 
     private void Awake()
     {
@@ -32,6 +35,7 @@ public class EntitySpawner : MonoBehaviour
     {
         _turnAvaliable = true;
         CreateTiles();
+        FindObstacles();
         RePopulateTiles();
     }
 
@@ -46,6 +50,15 @@ public class EntitySpawner : MonoBehaviour
             RePopulateTiles();
         }
         Time.timeScale = _timeScale;
+    }
+
+    private void FindObstacles()
+    {
+        Obstacles = _obstcleTilemap.GetComponentsInChildren<Obstacle>().ToList();
+        for (int i = 0; i < Obstacles.Count; i++)
+        {
+            Obstacles[i].ConnectToTile();
+        }
     }
 
     private void CheckTileData()
@@ -67,7 +80,7 @@ public class EntitySpawner : MonoBehaviour
                     _turnAvaliable = false;
                     for (int i = 0; i < oneTypeTiles.Count; i++)
                     {
-                        WaitDeath(oneTypeTiles[i]);
+                        DamageEntity(oneTypeTiles[i]);
                     }
                     StartCoroutine(ActivateFall(oneTypeTiles,_deathWait));
                     StartCoroutine(TurnReset(_deathWait + 0.2f));
@@ -131,10 +144,14 @@ public class EntitySpawner : MonoBehaviour
         return tiles;
     }
 
-    private void WaitDeath(GameTile tile)
+    private void DamageEntity(GameTile tile)
     {
-        tile.CurrentEntity.Die(_deathWait);
-        tile.CurrentEntity = null;
+        if (tile.CurrentObstacle != null) tile.CurrentObstacle.Damage();
+        else
+        {
+            tile.CurrentEntity.Die(_deathWait);
+            tile.CurrentEntity = null;
+        } 
     }
 
     private void CheckOneTypeRecursive(Vector3Int tilePos, List<GameTile> oneTypeTiles, List<Vector3Int> checkedTiles)
