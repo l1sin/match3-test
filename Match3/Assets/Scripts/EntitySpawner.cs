@@ -67,11 +67,10 @@ public class EntitySpawner : MonoBehaviour
                     _turnAvaliable = false;
                     for (int i = 0; i < oneTypeTiles.Count; i++)
                     {
-                        StartCoroutine(WaitDeath(oneTypeTiles[i], _deathWait * (i + 1)));
+                        WaitDeath(oneTypeTiles[i]);
                     }
-                    float time = _deathWait * (oneTypeTiles.Count); 
-                    StartCoroutine(ActivateFall(oneTypeTiles, time + _deathWait));
-                    StartCoroutine(TurnReset(time + _deathWait));
+                    StartCoroutine(ActivateFall(oneTypeTiles,_deathWait));
+                    StartCoroutine(TurnReset(_deathWait + 0.2f));
                 }
             }
         }
@@ -132,9 +131,8 @@ public class EntitySpawner : MonoBehaviour
         return tiles;
     }
 
-    private IEnumerator WaitDeath(GameTile tile, float seconds)
+    private void WaitDeath(GameTile tile)
     {
-        yield return new WaitForSeconds(seconds);
         tile.CurrentEntity.Die(_deathWait);
         tile.CurrentEntity = null;
     }
@@ -180,7 +178,8 @@ public class EntitySpawner : MonoBehaviour
             {
                 for (int k = tilemap.origin.x; k <= tilemap.origin.x + tilemap.cellBounds.size.x - 1; k++)
                 {
-                    newList.Add(new Vector3Int(k, j, i));
+                    Vector3Int pos = new Vector3Int(k, j, i);
+                    if (_tilemap.GetTile(pos) != null) newList.Add(pos);
                 }
             }
         }
