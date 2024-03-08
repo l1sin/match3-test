@@ -115,7 +115,6 @@ public class EntitySpawner : MonoBehaviour
             tileInCheck = GetTile(pos + Vector3Int.down);
             if (CheckIfAdjacent(tileInCheck, tiles) && !adjacentTiles.Contains(tileInCheck)) adjacentTiles.Add(tileInCheck);
         }
-        Debug.Log(adjacentTiles.Count);
         return adjacentTiles;
     }
 
