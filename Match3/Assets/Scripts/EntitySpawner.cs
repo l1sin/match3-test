@@ -33,6 +33,7 @@ public class EntitySpawner : MonoBehaviour
 
     private void Start()
     {
+        Application.targetFrameRate = 60;
         _turnAvaliable = true;
         CreateTiles();
         FindObstacles();
