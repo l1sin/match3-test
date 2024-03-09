@@ -26,6 +26,8 @@ public class LevelController : MonoBehaviour
 
     [SerializeField] private Transitor _transitor;
 
+    private int _levelIndex;
+
     private void Start()
     {
         Singleton();
@@ -40,6 +42,22 @@ public class LevelController : MonoBehaviour
             _starImages[i].sprite = _starSprites[1];
         }
         _winTMP.text = _winText[stars - 1];
+        Save(stars);
+    }
+
+    private void Save(int stars)
+    {
+        Progress progress = SaveManager.Instance.CurrentProgress;
+        if (_levelIndex > progress.LevelsComplete) progress.LevelsComplete = _levelIndex;
+
+        LevelInfo info = progress.LevelData[_levelIndex - 1];
+
+        if (stars > info.Stars) info.Stars = stars;
+        if (_playerScore > info.HighScore) info.HighScore = _playerScore;
+
+        progress.LevelData[_levelIndex - 1] = info;
+
+        SaveManager.Instance.SaveData(progress);
     }
 
     public void TriggerLose()
@@ -76,6 +94,7 @@ public class LevelController : MonoBehaviour
     {
         UpdateTurns();
         UpdatePoints();
+        _levelIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
     private void UpdateTurns()

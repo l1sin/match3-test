@@ -21,9 +21,19 @@ public class MenuController : MonoBehaviour
 
     private void LoadLevelButtons()
     {
+        Progress progress = SaveManager.Instance.CurrentProgress;
         for (int i = 0; i < _levelButtons.Length; i++)
         {
-            _levelButtons[i].UpdateData(0);
+            LevelInfo li = progress.LevelData[i];
+
+            _levelButtons[i].UpdateData(li.Stars);
+        }
+
+        _levelButtons[0].SetButtonState(true);
+        for (int i = 0; i < progress.LevelsComplete; i++)
+        {
+            if (i >= _levelButtons.Length) break;
+            _levelButtons[i + 1].SetButtonState(true);
         }
     }
 

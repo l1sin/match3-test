@@ -20,6 +20,11 @@ public class LevelButton : MonoBehaviour
         }
     }
 
+    public void SetButtonState(bool state)
+    {
+        _button.interactable = state;
+    }
+
     private void LoadLevel()
     {
         MenuController.Instance.LoadLevel(_level);
