@@ -7,12 +7,12 @@ public class LevelController : MonoBehaviour
 {
     public static LevelController Instance;
 
-    [SerializeField] private int _turnsLeft;
+    public int TurnsLeft;
     [SerializeField] private int _targetScore;
     [SerializeField] private int _playerScore;
     [SerializeField] private ProgressBar _progressBar;
     [SerializeField] private TextMeshProUGUI _targetScoreTMP;
-    [SerializeField] private TextMeshProUGUI _leftToScoreTMP;
+    [SerializeField] private TextMeshProUGUI _playerScoreTMP;
     [SerializeField] private TextMeshProUGUI _turnsLeftTMP;
 
     [SerializeField] private GameObject _winScreen;
@@ -23,9 +23,8 @@ public class LevelController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _winTMP;
     [SerializeField] private string[] _winText;
     [SerializeField] private float[] _completionPercent;
+
     [SerializeField] private Transitor _transitor;
-
-
 
     private void Start()
     {
@@ -56,9 +55,9 @@ public class LevelController : MonoBehaviour
 
     public void DoTurn()
     {
-        _turnsLeft--;
+        TurnsLeft--;
         UpdateTurns();
-        if (_turnsLeft <= 0)
+        if (TurnsLeft <= 0)
         {
             CalculateCompletion();
         }
@@ -81,16 +80,14 @@ public class LevelController : MonoBehaviour
 
     private void UpdateTurns()
     {
-        _turnsLeftTMP.text = $"Turns left: {_turnsLeft}";
+        _turnsLeftTMP.text = $"Turns left: {TurnsLeft}";
     }
 
     private void UpdatePoints()
     {
-        int scoreLeft = Mathf.Max(_targetScore - _playerScore, 0);
-        _leftToScoreTMP.text = $"Left to score: {scoreLeft}";
+        _playerScoreTMP.text = $"Score: {_playerScore}";
         _targetScoreTMP.text = $"Target: {_targetScore}";
         _progressBar.UpdateProgressBar(_playerScore, _targetScore);
-        if (scoreLeft == 0) TriggerWin(3);
     }
 
     private void Singleton()

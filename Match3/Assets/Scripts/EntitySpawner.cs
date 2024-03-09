@@ -64,7 +64,7 @@ public class EntitySpawner : MonoBehaviour
 
     private void CheckTileData()
     {
-        if (_turnAvaliable)
+        if (_turnAvaliable && LevelController.Instance.TurnsLeft > 0)
         {
             Vector3 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
             Vector3Int tilePos = _tilemap.WorldToCell(mousePos);
