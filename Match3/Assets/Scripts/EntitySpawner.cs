@@ -65,7 +65,11 @@ public class EntitySpawner : MonoBehaviour
 
     private void CheckFallingCount()
     {
-        if (FallingEntities == 0) _tilesFalling = false;
+        if (FallingEntities == 0)
+        {
+            _tilesFalling = false;
+            LevelController.Instance.CheckIfLevelEnd();
+        } 
         else _tilesFalling = true;
     }
 

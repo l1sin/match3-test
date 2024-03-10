@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -27,6 +28,7 @@ public class LevelController : MonoBehaviour
 
     [SerializeField] private Transitor _transitor;
 
+    [SerializeField] private float _endLevelDelay = 0.5f;
     private int _levelIndex;
     public event Action TurnMade;
 
@@ -77,10 +79,17 @@ public class LevelController : MonoBehaviour
         TurnsLeft -= cost;
         UpdateTurns();
         TurnMade?.Invoke();
-        if (TurnsLeft <= 0)
-        {
-            CalculateCompletion();
-        }
+    }
+
+    public void CheckIfLevelEnd()
+    {
+        if (TurnsLeft <= 0) StartCoroutine(EndLevel());
+    }
+
+    private IEnumerator EndLevel()
+    {
+        yield return new WaitForSeconds(_endLevelDelay);
+        CalculateCompletion();
     }
 
     public void CalculateCompletion()
