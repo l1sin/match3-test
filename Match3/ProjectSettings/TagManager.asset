@@ -11,7 +11,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Entity
   - 
   - 
   - 
@@ -40,4 +40,19 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 2472636881
+    locked: 0
+  - name: EntityFrame
+    uniqueID: 1388182545
+    locked: 0
+  - name: Entity
+    uniqueID: 970061093
+    locked: 0
+  - name: Obstacle
+    uniqueID: 1185114265
+    locked: 0
+  - name: Particles
+    uniqueID: 3013924559
     locked: 0
