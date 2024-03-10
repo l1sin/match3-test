@@ -11,6 +11,7 @@ public class MenuController : MonoBehaviour
 
     public void Start()
     {
+        Application.targetFrameRate = 120;
         LoadSliders();
         LoadLevelButtons();
     }
@@ -39,14 +40,13 @@ public class MenuController : MonoBehaviour
         for (int i = 0; i < _levelButtons.Length; i++)
         {
             LevelInfo li = progress.LevelData[i];
-
             _levelButtons[i].UpdateData(li.Stars);
         }
 
         _levelButtons[0].SetButtonState(true);
         for (int i = 0; i < progress.LevelsComplete; i++)
         {
-            if (i >= progress.LevelsComplete - 1) break;
+            if (i == _levelButtons.Length - 1) break;
             _levelButtons[i + 1].SetButtonState(true);
         }
     }

@@ -52,7 +52,6 @@ public class EntitySpawner : MonoBehaviour
 
     private void Start()
     {
-        Application.targetFrameRate = 60;
         CreateTiles();
         FindObstacles();
         RePopulateTiles();
