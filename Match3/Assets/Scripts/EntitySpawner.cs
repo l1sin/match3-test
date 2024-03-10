@@ -16,8 +16,8 @@ public class EntitySpawner : MonoBehaviour
     [SerializeField] private Sprite[] _sprites;
     public float DeathWait = 0.3f;
     [SerializeField] private int _comboAmount;
-    private bool _tilesFalling;
-    private bool _tilesActing;
+    [SerializeField] private bool _tilesFalling;
+    [SerializeField] private bool _tilesActing;
     private int _debugCount;
     private int _currentType;
     [SerializeField] private int debugint;
@@ -91,10 +91,8 @@ public class EntitySpawner : MonoBehaviour
             GameTile tile = GetTile(tilePos);
 
             if (tile != null && tile.CurrentObstacle == null)
-            {
-                _tilesActing = true;
+            {     
                 LevelController.Instance.DoTurn(1);
-
                 _currentType = tile.CurrentEntity.EntityType;
                 List<GameTile> oneTypeTiles = new List<GameTile>() { tile };
                 List<Vector3Int> checkedTiles = new List<Vector3Int>() { tilePos };
@@ -102,6 +100,7 @@ public class EntitySpawner : MonoBehaviour
                 List<GameTile> adjacentTiles = GetAdjacentTiles(oneTypeTiles);
                 if (oneTypeTiles.Count >= _comboAmount)
                 {
+                    _tilesActing = true;
                     for (int i = 0; i < oneTypeTiles.Count; i++)
                     {
                         DamageEntity(oneTypeTiles[i]);
@@ -177,12 +176,22 @@ public class EntitySpawner : MonoBehaviour
         tiles.Sort();
         tiles.Reverse();
         DeleteLowerTiles(tiles);
+        DeleteEntityTiles(tiles);
         tiles.Reverse();
         foreach (GameTile tile in tiles)
         {
             MakeFall(tile.Pos + Vector3Int.up);
         }
         _tilesActing = false;
+    }
+
+    private List<GameTile> DeleteEntityTiles(List<GameTile> tiles)
+    {
+        for (int i = tiles.Count - 1; i >= 0; i--)
+        {
+            if (tiles[i].CurrentEntity != null) tiles.RemoveAt(i);
+        }
+        return tiles;
     }
 
     private List<GameTile> DeleteLowerTiles(List<GameTile> tiles)
@@ -322,6 +331,7 @@ public class EntitySpawner : MonoBehaviour
     {
         RePopulateTiles();
         LevelController.Instance.DoTurn(cost);
+        LevelController.Instance.CheckIfLevelEnd();
     }
 
     private void Singleton()
