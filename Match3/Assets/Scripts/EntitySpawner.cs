@@ -16,7 +16,8 @@ public class EntitySpawner : MonoBehaviour
     [SerializeField] private Sprite[] _sprites;
     public float DeathWait = 0.3f;
     [SerializeField] private int _comboAmount;
-    private bool _turnAvaliable;
+    private bool _tilesFalling;
+    private bool _tilesActing;
     private int _debugCount;
     private int _currentType;
     [SerializeField] private int debugint;
@@ -24,6 +25,21 @@ public class EntitySpawner : MonoBehaviour
     [SerializeField] private float _timeScale;
     [SerializeField] private GameObject _obstcleTilemap;
     public List<Obstacle> Obstacles;
+
+    private int _fallingEntities;
+    public int FallingEntities
+    {
+        get 
+        {
+            return _fallingEntities; 
+        }
+        set
+        {
+            _fallingEntities = value;
+            CheckFallingCount();
+        }
+    }
+    
 
     private void Awake()
     {
@@ -33,10 +49,10 @@ public class EntitySpawner : MonoBehaviour
     private void Start()
     {
         Application.targetFrameRate = 60;
-        _turnAvaliable = true;
         CreateTiles();
         FindObstacles();
         RePopulateTiles();
+        CheckFallingCount();
     }
 
     private void Update()
@@ -45,11 +61,12 @@ public class EntitySpawner : MonoBehaviour
         {
             CheckTileData();
         }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            RePopulateTiles();
-        }
-        Time.timeScale = _timeScale;
+    }
+
+    private void CheckFallingCount()
+    {
+        if (FallingEntities == 0) _tilesFalling = false;
+        else _tilesFalling = true;
     }
 
     private void FindObstacles()
@@ -63,7 +80,7 @@ public class EntitySpawner : MonoBehaviour
 
     private void CheckTileData()
     {
-        if (_turnAvaliable && LevelController.Instance.TurnsLeft > 0)
+        if (!_tilesActing && !_tilesFalling && LevelController.Instance.TurnsLeft > 0)
         {
             Vector3 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
             Vector3Int tilePos = _tilemap.WorldToCell(mousePos);
@@ -71,6 +88,7 @@ public class EntitySpawner : MonoBehaviour
 
             if (tile != null && tile.CurrentObstacle == null)
             {
+                _tilesActing = true;
                 LevelController.Instance.DoTurn(1);
 
                 _currentType = tile.CurrentEntity.EntityType;
@@ -80,7 +98,6 @@ public class EntitySpawner : MonoBehaviour
                 List<GameTile> adjacentTiles = GetAdjacentTiles(oneTypeTiles);
                 if (oneTypeTiles.Count >= _comboAmount)
                 {
-                    _turnAvaliable = false;
                     for (int i = 0; i < oneTypeTiles.Count; i++)
                     {
                         DamageEntity(oneTypeTiles[i]);
@@ -92,7 +109,6 @@ public class EntitySpawner : MonoBehaviour
                     }
 
                     StartCoroutine(ActivateFall(oneTypeTiles,DeathWait));
-                    StartCoroutine(TurnReset(DeathWait + 0.2f));
                 }
             }
         }
@@ -151,11 +167,6 @@ public class EntitySpawner : MonoBehaviour
         else return false;
     }
 
-    private IEnumerator TurnReset(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-        _turnAvaliable = true;
-    }
     private IEnumerator ActivateFall(List<GameTile> tiles,float seconds)
     {
         yield return new WaitForSeconds(seconds);
@@ -167,6 +178,7 @@ public class EntitySpawner : MonoBehaviour
         {
             MakeFall(tile.Pos + Vector3Int.up);
         }
+        _tilesActing = false;
     }
 
     private List<GameTile> DeleteLowerTiles(List<GameTile> tiles)

@@ -20,6 +20,7 @@ public class Entity : MonoBehaviour
     [Header("System values")]
     private bool _canCallUpperToFall = true;
     private bool _spawned = false;
+    private bool _isFalling;
     private int _distanceTraveled = 0;
 
     private void Start()
@@ -67,7 +68,11 @@ public class Entity : MonoBehaviour
             mySequence.Append(transform.DOScaleY(_minSizeY, _animTime * 0.5f));
             mySequence.Append(transform.DOScaleY(1f, _animTime * 0.5f));
         }
-
+        if (_isFalling)
+        {
+            _isFalling = false;
+            EntitySpawner.Instance.FallingEntities--;
+        }
         _distanceTraveled = 0;
         _canCallUpperToFall = true;
     }
@@ -77,6 +82,11 @@ public class Entity : MonoBehaviour
         if (MyTile.CurrentObstacle != null) return;
         if (EntitySpawner.Instance.CheckTileBelow(Pos))
         {
+            if (!_isFalling)
+            {
+                _isFalling = true;
+                EntitySpawner.Instance.FallingEntities++;
+            }
             if (_canCallUpperToFall) StartCoroutine(CallUpperTile());
             MyTile.CurrentEntity = null;
             MyTile = null;
