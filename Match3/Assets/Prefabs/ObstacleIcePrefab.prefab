@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7165467127250018896}
   - component: {fileID: -2079747669178384152}
   m_Layer: 0
-  m_Name: ObstaclePrefab
+  m_Name: ObstacleIcePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 1185114265
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e6a4bd9b7874b224b98daa8c0589380e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 62ac1a7648cb9e3429a28e727e9b327c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.7490196}
   m_FlipX: 0
   m_FlipY: 0
@@ -104,3 +104,6 @@ MonoBehaviour:
     Pos: {x: 0, y: 0, z: 0}
     CurrentObstacle: {fileID: 0}
   _spriteRenderer: {fileID: 7165467127250018896}
+  _sprites:
+  - {fileID: 21300000, guid: 62ac1a7648cb9e3429a28e727e9b327c, type: 3}
+  - {fileID: 21300000, guid: 58b37231716425e45b3aca1d75fe1258, type: 3}

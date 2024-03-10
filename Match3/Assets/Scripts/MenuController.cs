@@ -46,7 +46,7 @@ public class MenuController : MonoBehaviour
         _levelButtons[0].SetButtonState(true);
         for (int i = 0; i < progress.LevelsComplete; i++)
         {
-            if (i >= _levelButtons.Length) break;
+            if (i >= progress.LevelsComplete - 1) break;
             _levelButtons[i + 1].SetButtonState(true);
         }
     }

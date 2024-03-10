@@ -9,6 +9,7 @@ public class Obstacle : MonoBehaviour
     [SerializeField] private SpriteRenderer _spriteRenderer;
     private static float s_maxScale = 1.25f;
     private static Color s_endColor = new Color(1, 1, 1, 0);
+    [SerializeField] private Sprite[] _sprites;
 
     public void ConnectToTile()
     {
@@ -20,6 +21,7 @@ public class Obstacle : MonoBehaviour
     public void Damage()
     {
         Health--;
+        if (Health != 0) _spriteRenderer.sprite = _sprites[Health-1];
         if (Health <= 0)
         {
             Die();

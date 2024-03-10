@@ -1050,6 +1050,7 @@ MonoBehaviour:
   - 0.8
   - 1
   _transitor: {fileID: 7647788528872144113}
+  _endLevelDelay: 0.5
 --- !u!1 &7619286435275242149
 GameObject:
   m_ObjectHideFlags: 0
