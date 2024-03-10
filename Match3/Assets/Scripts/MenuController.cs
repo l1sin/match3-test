@@ -6,17 +6,32 @@ public class MenuController : MonoBehaviour
 
     [SerializeField] private Transitor _transitor;
     [SerializeField] private LevelButton[] _levelButtons;
+    [SerializeField] private SliderController[] _sliders;
     public Sprite[] Stars;
 
     public void Start()
     {
         Singleton();
+        LoadSliders();
         LoadLevelButtons();
+    }
+
+    private void LoadSliders()
+    {
+        for (int i = 0; i < _sliders.Length; i++)
+        {
+            _sliders[i].LoadSlider();
+        }
     }
 
     public void LoadLevel(int level)
     {
         _transitor.TransitOut(level);
+    }
+
+    public void SaveCurrentState()
+    {
+        SaveManager.Instance.SaveData(SaveManager.Instance.CurrentProgress);
     }
 
     private void LoadLevelButtons()

@@ -197,6 +197,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2045367443849399589}
+  - component: {fileID: 5945635481616323024}
   m_Layer: 5
   m_Name: LoseScreen
   m_TagString: Untagged
@@ -225,6 +226,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &5945635481616323024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3687784273782899286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3820a1b7a794d8146a29046617f9f68f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _UiElements:
+  - {fileID: 7196159385576576181}
+  _transitionTime: 0.25
 --- !u!1 &4186431258203771990
 GameObject:
   m_ObjectHideFlags: 0
@@ -1727,6 +1743,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4568279267315647223}
+  - component: {fileID: 2288429432995038626}
   m_Layer: 5
   m_Name: WinScreen
   m_TagString: Untagged
@@ -1755,6 +1772,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2288429432995038626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5094487089424624736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3820a1b7a794d8146a29046617f9f68f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _UiElements:
+  - {fileID: 4991906666785066713}
+  _transitionTime: 0.25
 --- !u!1 &5330609326556338456
 GameObject:
   m_ObjectHideFlags: 0
@@ -2053,6 +2085,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4930681401772392006}
+  - component: {fileID: 8331314003225784239}
   m_Layer: 5
   m_Name: GameUI
   m_TagString: Untagged
@@ -2081,6 +2114,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8331314003225784239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7176100670793917452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3820a1b7a794d8146a29046617f9f68f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _UiElements:
+  - {fileID: 4289916782909040300}
+  - {fileID: 7074746593421271947}
+  _transitionTime: 0.25
 --- !u!1 &7196159385576576181
 GameObject:
   m_ObjectHideFlags: 0
