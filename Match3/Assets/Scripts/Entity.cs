@@ -80,6 +80,7 @@ public class Entity : MonoBehaviour
     public void Fall()
     {
         if (MyTile.CurrentObstacle != null) return;
+
         if (EntitySpawner.Instance.CheckTileBelow(Pos))
         {
             if (!_isFalling)
@@ -92,10 +93,7 @@ public class Entity : MonoBehaviour
             MyTile = null;
             MoveDown();
         }
-        else
-        {
-            EndFall();
-        }
+        else EndFall();
     }
 
     public void MoveDown()

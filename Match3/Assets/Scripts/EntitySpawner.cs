@@ -20,13 +20,12 @@ public class EntitySpawner : MonoBehaviour
     [SerializeField] private bool _tilesActing;
     private int _debugCount;
     private int _currentType;
-    [SerializeField] private int debugint;
     [SerializeField] private Dictionary<Vector3Int, GameTile> _tileDictionary = new Dictionary<Vector3Int, GameTile>();
     [SerializeField] private float _timeScale;
     [SerializeField] private GameObject _obstcleTilemap;
     public List<Obstacle> Obstacles;
 
-    private int _fallingEntities;
+    [SerializeField] private int _fallingEntities;
     public int FallingEntities
     {
         get 
@@ -98,6 +97,7 @@ public class EntitySpawner : MonoBehaviour
                 List<Vector3Int> checkedTiles = new List<Vector3Int>() { tilePos };
                 CheckOneTypeRecursive(tilePos, oneTypeTiles, checkedTiles);
                 List<GameTile> adjacentTiles = GetAdjacentTiles(oneTypeTiles);
+                oneTypeTiles.Sort();
                 if (oneTypeTiles.Count >= _comboAmount)
                 {
                     _tilesActing = true;
@@ -163,17 +163,14 @@ public class EntitySpawner : MonoBehaviour
     {
         tilePos += new Vector3Int(0, -1, 0);
         GameTile tile = GetTile(tilePos);
-        if (tile != null && tile.CurrentEntity == null)
-        {
-            return true;
-        }
+        if (tile != null && tile.CurrentEntity == null) return true;
         else return false;
     }
 
     private IEnumerator ActivateFall(List<GameTile> tiles,float seconds)
     {
         yield return new WaitForSeconds(seconds);
-        tiles.Sort();
+        //tiles.Sort();
         tiles.Reverse();
         DeleteLowerTiles(tiles);
         DeleteEntityTiles(tiles);
