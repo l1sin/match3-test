@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using Sounds;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class LevelButton : MonoBehaviour
@@ -37,6 +37,6 @@ public class LevelButton : MonoBehaviour
 
     private void OnDisable()
     {
-        _button.onClick.RemoveAllListeners();
+        _button.onClick.RemoveListener(LoadLevel);
     }
 }

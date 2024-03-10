@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5652143221524581703
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1647840325399193195}
+  - component: {fileID: 6112693073596689118}
+  - component: {fileID: 3238664088946882783}
+  m_Layer: 0
+  m_Name: ---DATA---
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1647840325399193195
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5652143221524581703}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6112693073596689118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5652143221524581703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 124cbfe287ea88846b5658bfb5fafc2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentProgress:
+    LevelsComplete: 0
+    LevelData:
+    - Stars: 0
+      HighScore: 0
+    - Stars: 0
+      HighScore: 0
+    - Stars: 0
+      HighScore: 0
+    - Stars: 0
+      HighScore: 0
+    - Stars: 0
+      HighScore: 0
+    - Stars: 0
+      HighScore: 0
+    - Stars: 0
+      HighScore: 0
+    - Stars: 0
+      HighScore: 0
+    - Stars: 0
+      HighScore: 0
+    - Stars: 0
+      HighScore: 0
+    - Stars: 0
+      HighScore: 0
+    - Stars: 0
+      HighScore: 0
+    - Stars: 0
+      HighScore: 0
+    - Stars: 0
+      HighScore: 0
+    - Stars: 0
+      HighScore: 0
+--- !u!114 &3238664088946882783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5652143221524581703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 563ebaa55046e934da94483bd3facc57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundPrefab: {fileID: 3082421271153698346, guid: 5be4c79f3beea354e9ee824419b6002b,
+    type: 3}
+  _audioMixer: {fileID: 24100000, guid: c99f098306b88594b98111629e50f3ad, type: 2}
