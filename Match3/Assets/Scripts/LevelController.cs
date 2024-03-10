@@ -122,7 +122,7 @@ public class LevelController : MonoBehaviour
 
     private void Singleton()
     {
-        if (Instance != null && Instance != this) Destroy(Instance.gameObject);
+        if (Instance != null && Instance != this) Destroy(gameObject);
         else Instance = this;
     }
 

@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using DG.Tweening;
 using System.Linq;
+using Sounds;
+using UnityEngine.Audio;
 
 public class EntitySpawner : MonoBehaviour
 {
@@ -26,6 +28,9 @@ public class EntitySpawner : MonoBehaviour
     public List<Obstacle> Obstacles;
 
     [SerializeField] private int _fallingEntities;
+
+    [SerializeField] AudioMixerGroup _audioMixerGroup;
+    [SerializeField] AudioClip _popSound;
     public int FallingEntities
     {
         get 
@@ -105,6 +110,7 @@ public class EntitySpawner : MonoBehaviour
                     {
                         DamageEntity(oneTypeTiles[i]);
                     }
+                    SoundManager.Instance.PlaySound(_popSound, _audioMixerGroup);
 
                     for (int i = 0; i < adjacentTiles.Count; i++)
                     {
@@ -333,7 +339,7 @@ public class EntitySpawner : MonoBehaviour
 
     private void Singleton()
     {
-        if (Instance != null && Instance != this) Destroy(Instance.gameObject);
+        if (Instance != null && Instance != this) Destroy(gameObject);
         else Instance = this;
     }
 
