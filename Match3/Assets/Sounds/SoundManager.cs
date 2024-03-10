@@ -10,19 +10,6 @@ namespace Sounds
         [SerializeField] private GameObject _soundPrefab;
         [SerializeField] private AudioMixer _audioMixer;
 
-        private void Awake()
-        {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-            }
-            else
-            {
-                Instance = this;
-            }
-            DontDestroyOnLoad(gameObject);
-        }
-
         public AudioSource PlaySound(AudioClip clip, AudioMixerGroup audioMixerGroup = null, float volume = 1)
         {
             var newSound = Instantiate(_soundPrefab);
@@ -63,12 +50,21 @@ namespace Sounds
 
         private void OnEnable()
         {
+            Singleton();
             SceneManager.sceneLoaded += ResetMixer;
         }
 
         private void OnDisable()
         {
             SceneManager.sceneLoaded += ResetMixer;
+        }
+
+        private void Singleton()
+        {
+            if (Instance != null && Instance != this) Destroy(gameObject);
+            else Instance = this;
+            gameObject.transform.parent = null;
+            DontDestroyOnLoad(gameObject);
         }
     }
 }

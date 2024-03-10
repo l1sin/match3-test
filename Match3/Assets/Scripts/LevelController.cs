@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -27,10 +28,10 @@ public class LevelController : MonoBehaviour
     [SerializeField] private Transitor _transitor;
 
     private int _levelIndex;
+    public event Action TurnMade;
 
     private void Start()
     {
-        Singleton();
         Init();
     }
 
@@ -71,10 +72,11 @@ public class LevelController : MonoBehaviour
         UpdatePoints();
     }
 
-    public void DoTurn()
+    public void DoTurn(int cost)
     {
-        TurnsLeft--;
+        TurnsLeft -= cost;
         UpdateTurns();
+        TurnMade?.Invoke();
         if (TurnsLeft <= 0)
         {
             CalculateCompletion();
@@ -123,5 +125,10 @@ public class LevelController : MonoBehaviour
     public void ReloadLevel()
     {
         _transitor.TransitOut(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private void OnEnable()
+    {
+        Singleton();
     }
 }

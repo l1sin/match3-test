@@ -11,7 +11,6 @@ public class MenuController : MonoBehaviour
 
     public void Start()
     {
-        Singleton();
         LoadSliders();
         LoadLevelButtons();
     }
@@ -56,5 +55,10 @@ public class MenuController : MonoBehaviour
     {
         if (Instance != null && Instance != this) Destroy(Instance.gameObject);
         else Instance = this;
+    }
+
+    private void OnEnable()
+    {
+        Singleton();
     }
 }

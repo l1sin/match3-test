@@ -7,7 +7,6 @@ public class SaveManager : MonoBehaviour
 
     private void Start()
     {
-        Singleton();
         LoadData();
     }
 
@@ -41,6 +40,12 @@ public class SaveManager : MonoBehaviour
     {
         if (Instance != null && Instance != this) Destroy(gameObject);
         else Instance = this;
+        gameObject.transform.parent = null;
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void OnEnable()
+    {
+        Singleton();
     }
 }

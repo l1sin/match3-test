@@ -28,7 +28,6 @@ public class EntitySpawner : MonoBehaviour
     private void Awake()
     {
         DOTween.Init();
-        Singleton();
     }
 
     private void Start()
@@ -72,7 +71,7 @@ public class EntitySpawner : MonoBehaviour
 
             if (tile != null && tile.CurrentObstacle == null)
             {
-                LevelController.Instance.DoTurn();
+                LevelController.Instance.DoTurn(1);
 
                 _currentType = tile.CurrentEntity.EntityType;
                 List<GameTile> oneTypeTiles = new List<GameTile>() { tile };
@@ -295,15 +294,28 @@ public class EntitySpawner : MonoBehaviour
         return entity;
     }
 
+    
+
+    public GameTile GetTile(Vector3Int v)
+    {
+        _tileDictionary.TryGetValue(v, out GameTile tile);
+        return tile;
+    }
+
+    public void AbilityReshuffle(int cost)
+    {
+        RePopulateTiles();
+        LevelController.Instance.DoTurn(cost);
+    }
+
     private void Singleton()
     {
         if (Instance != null && Instance != this) Destroy(Instance.gameObject);
         else Instance = this;
     }
 
-    public GameTile GetTile(Vector3Int v)
+    private void OnEnable()
     {
-        _tileDictionary.TryGetValue(v, out GameTile tile);
-        return tile;
+        Singleton();
     }
 }
