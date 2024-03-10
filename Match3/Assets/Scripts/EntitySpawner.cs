@@ -96,7 +96,6 @@ public class EntitySpawner : MonoBehaviour
 
             if (tile != null && tile.CurrentObstacle == null)
             {     
-                LevelController.Instance.DoTurn(1);
                 _currentType = tile.CurrentEntity.EntityType;
                 List<GameTile> oneTypeTiles = new List<GameTile>() { tile };
                 List<Vector3Int> checkedTiles = new List<Vector3Int>() { tilePos };
@@ -105,6 +104,7 @@ public class EntitySpawner : MonoBehaviour
                 oneTypeTiles.Sort();
                 if (oneTypeTiles.Count >= _comboAmount)
                 {
+                    LevelController.Instance.DoTurn(1);
                     _tilesActing = true;
                     for (int i = 0; i < oneTypeTiles.Count; i++)
                     {

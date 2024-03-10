@@ -48,12 +48,12 @@ PrefabInstance:
     - target: {fileID: 1841919593641604233, guid: b143eafea2970244693e5198fe13345f,
         type: 3}
       propertyPath: m_text
-      value: "Sounds\n Volume"
+      value: Sounds Volume
       objectReference: {fileID: 0}
     - target: {fileID: 1841919593641604233, guid: b143eafea2970244693e5198fe13345f,
         type: 3}
       propertyPath: m_fontSize
-      value: 125
+      value: 72
       objectReference: {fileID: 0}
     - target: {fileID: 1841919593641604233, guid: b143eafea2970244693e5198fe13345f,
         type: 3}
@@ -93,7 +93,7 @@ PrefabInstance:
     - target: {fileID: 2667065844628380395, guid: b143eafea2970244693e5198fe13345f,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1250
+      value: 800
       objectReference: {fileID: 0}
     - target: {fileID: 2667065844628380395, guid: b143eafea2970244693e5198fe13345f,
         type: 3}
@@ -207,7 +207,7 @@ PrefabInstance:
     - target: {fileID: 1841919593641604233, guid: b143eafea2970244693e5198fe13345f,
         type: 3}
       propertyPath: m_fontSize
-      value: 125
+      value: 72
       objectReference: {fileID: 0}
     - target: {fileID: 1841919593641604233, guid: b143eafea2970244693e5198fe13345f,
         type: 3}
@@ -247,7 +247,7 @@ PrefabInstance:
     - target: {fileID: 2667065844628380395, guid: b143eafea2970244693e5198fe13345f,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1250
+      value: 800
       objectReference: {fileID: 0}
     - target: {fileID: 2667065844628380395, guid: b143eafea2970244693e5198fe13345f,
         type: 3}

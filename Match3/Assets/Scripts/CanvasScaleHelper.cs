@@ -3,20 +3,26 @@ using UnityEngine.UI;
 
 public class CanvasScaleHelper : MonoBehaviour
 {
-    public RectTransform rect;
-    public CanvasScaler scaler;
-    private const float defaultRatio = 16f / 9f;
+    [SerializeField] private RectTransform _rectTransform;
+    [SerializeField] private CanvasScaler _canvasScaler;
+    [SerializeField] private Vector2 _ratio;
+    private float _ratioF;
+
+    private void Start()
+    {
+        _ratioF = _ratio.x / _ratio.y;
+    }
 
     private void Update()
     {
-        float ratio = rect.rect.width / rect.rect.height;
-        if (ratio > defaultRatio)
+        float ratio = _rectTransform.rect.width / _rectTransform.rect.height;
+        if (ratio > _ratioF)
         {
-            scaler.matchWidthOrHeight = 1;
+            _canvasScaler.matchWidthOrHeight = 1;
         }
-        else if (ratio < defaultRatio)
+        else if (ratio < _ratioF)
         {
-            scaler.matchWidthOrHeight = 0;
+            _canvasScaler.matchWidthOrHeight = 0;
         }
     }
 }
