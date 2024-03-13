@@ -81,7 +81,7 @@ public class Yandex : MonoBehaviour
 
     public void EditorInit()
     {
-        //DataController.Instance.LoadAllData(DefaultLanguage.ToString());
+        DataController.Instance.LoadAllData(DefaultLanguage.ToString());
         SaveManager.Instance.LoadDataLocal();
     }
 }

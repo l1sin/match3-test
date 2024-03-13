@@ -327,7 +327,7 @@ PrefabInstance:
     - target: {fileID: 642362910341561577, guid: cafde553ef5d3cf4f8b7ce83e4508bd2,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 952782033280412543, guid: cafde553ef5d3cf4f8b7ce83e4508bd2,
         type: 3}
@@ -432,7 +432,7 @@ PrefabInstance:
     - target: {fileID: 1358600901546827670, guid: cafde553ef5d3cf4f8b7ce83e4508bd2,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2942416355821017354, guid: cafde553ef5d3cf4f8b7ce83e4508bd2,
         type: 3}
@@ -442,12 +442,12 @@ PrefabInstance:
     - target: {fileID: 7273923449673153619, guid: cafde553ef5d3cf4f8b7ce83e4508bd2,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9134060000431628076, guid: cafde553ef5d3cf4f8b7ce83e4508bd2,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1114,6 +1114,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ReturnButtonTMP
       objectReference: {fileID: 0}
+    - target: {fileID: 9011772075853148611, guid: 37d6c6aa334787e449bf3ac033d9a433,
+        type: 3}
+      propertyPath: LineID
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1564,6 +1569,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SelectLevelTMP
+      objectReference: {fileID: 0}
+    - target: {fileID: 5496069065269142850, guid: fdea9052c126b9c46932119cdd79670f,
+        type: 3}
+      propertyPath: LineID
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2743,6 +2753,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayButtonTMP
       objectReference: {fileID: 0}
+    - target: {fileID: 9011772075853148611, guid: 37d6c6aa334787e449bf3ac033d9a433,
+        type: 3}
+      propertyPath: LineID
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2965,6 +2980,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TitleTMP
+      objectReference: {fileID: 0}
+    - target: {fileID: 5496069065269142850, guid: fdea9052c126b9c46932119cdd79670f,
+        type: 3}
+      propertyPath: LineID
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3719,6 +3739,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SettingsTMP
+      objectReference: {fileID: 0}
+    - target: {fileID: 5496069065269142850, guid: fdea9052c126b9c46932119cdd79670f,
+        type: 3}
+      propertyPath: LineID
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4774,6 +4799,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ApplyButtonTMP
+      objectReference: {fileID: 0}
+    - target: {fileID: 9011772075853148611, guid: 37d6c6aa334787e449bf3ac033d9a433,
+        type: 3}
+      propertyPath: LineID
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

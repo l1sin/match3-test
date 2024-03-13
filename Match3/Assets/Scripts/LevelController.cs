@@ -23,7 +23,7 @@ public class LevelController : MonoBehaviour
     [SerializeField] private Image[] _starImages;
     [SerializeField] private Sprite[] _starSprites;
     [SerializeField] private TextMeshProUGUI _winTMP;
-    [SerializeField] private string[] _winText;
+    [SerializeField] private int[] _winTextLineId;
     [SerializeField] private float[] _completionPercent;
 
     [SerializeField] private Transitor _transitor;
@@ -44,7 +44,7 @@ public class LevelController : MonoBehaviour
         {
             _starImages[i].sprite = _starSprites[1];
         }
-        _winTMP.text = _winText[stars - 1];
+        _winTMP.text = DataController.Instance.Dictionary[_winTextLineId[stars - 1]];
         Save(stars);
     }
 
@@ -110,13 +110,13 @@ public class LevelController : MonoBehaviour
 
     private void UpdateTurns()
     {
-        _turnsLeftTMP.text = $"Turns left: {TurnsLeft}";
+        _turnsLeftTMP.text = $"{DataController.Instance.Dictionary[9]} {TurnsLeft}";
     }
 
     private void UpdatePoints()
     {
-        _playerScoreTMP.text = $"Score: {_playerScore}";
-        _targetScoreTMP.text = $"Target: {_targetScore}";
+        _playerScoreTMP.text = $"{DataController.Instance.Dictionary[10]} {_playerScore}";
+        _targetScoreTMP.text = $"{DataController.Instance.Dictionary[11]} {_targetScore}";
         _progressBar.UpdateProgressBar(_playerScore, _targetScore);
     }
 

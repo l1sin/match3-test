@@ -260,7 +260,7 @@ PrefabInstance:
     - target: {fileID: 70662516170131472, guid: b23f8233d84c9af45a9829482363f67d,
         type: 3}
       propertyPath: m_fontSize
-      value: 25
+      value: 35.4
       objectReference: {fileID: 0}
     - target: {fileID: 70662516170131472, guid: b23f8233d84c9af45a9829482363f67d,
         type: 3}
@@ -377,7 +377,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: TextIn
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3169670358748478561, guid: b23f8233d84c9af45a9829482363f67d, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

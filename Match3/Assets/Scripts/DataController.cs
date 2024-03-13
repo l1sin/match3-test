@@ -23,28 +23,6 @@ public class DataController : MonoBehaviour
     public void LoadAllData(string language)
     {
         LoadLanguage(language);
-        LoadPrice();
-        LoadExperience();
-    }
-
-    public void LoadExperience()
-    {
-        Experience = Utility.Utility.ReadCSVInt("Experience");
-    }
-
-    public float GetExperienceValue(int spellIndex, int spellLevel)
-    {
-        return Experience[spellLevel, spellIndex];
-    }
-
-    public int GetPriceValue(int upgradeIndex, int upgradeLevel)
-    {
-        return Price[upgradeLevel, upgradeIndex];
-    }
-
-    public void LoadPrice()
-    {
-        Price = Utility.Utility.ReadCSVInt("Price");
     }
 
     public void LoadLanguage(string language)
