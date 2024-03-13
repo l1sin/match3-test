@@ -14,6 +14,12 @@ public class MenuController : MonoBehaviour
         Application.targetFrameRate = 120;
         LoadSliders();
         LoadLevelButtons();
+#if UNITY_EDITOR || UNITY_STANDALONE
+        Debug.Log("Ready");
+#elif UNITY_WEBGL
+        Yandex.FullScreenAd();
+        Yandex.GameReady();
+#endif
     }
 
     private void LoadSliders()

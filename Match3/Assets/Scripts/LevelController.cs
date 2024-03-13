@@ -126,14 +126,14 @@ public class LevelController : MonoBehaviour
         else Instance = this;
     }
 
-    public void LoadLevel(int level)
+    public void LoadMenu()
     {
-        _transitor.TransitOut(level);
+        _transitor.TransitOut(SaveManager.Instance.MainMenuSceneIndex);
     }
 
     public void ReloadLevel()
     {
-        _transitor.TransitOut(SceneManager.GetActiveScene().buildIndex);
+        _transitor.TransitOut(SceneManager.GetActiveScene().buildIndex + SaveManager.Instance.MainMenuSceneIndex);
     }
 
     private void OnEnable()
