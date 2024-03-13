@@ -2986,6 +2986,11 @@ PrefabInstance:
       propertyPath: LineID
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5496069065269142850, guid: fdea9052c126b9c46932119cdd79670f,
+        type: 3}
+      propertyPath: LineBreak
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
