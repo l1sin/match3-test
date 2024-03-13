@@ -105,7 +105,7 @@ public class LevelController : MonoBehaviour
     {
         UpdateTurns();
         UpdatePoints();
-        _levelIndex = SceneManager.GetActiveScene().buildIndex;
+        _levelIndex = SceneManager.GetActiveScene().buildIndex - SaveManager.Instance.MainMenuSceneIndex;
     }
 
     private void UpdateTurns()

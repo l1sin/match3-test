@@ -1,7 +1,5 @@
-using Sounds;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class LevelButton : MonoBehaviour
@@ -27,7 +25,7 @@ public class LevelButton : MonoBehaviour
 
     private void LoadLevel()
     {
-        MenuController.Instance.LoadLevel(_level);
+        MenuController.Instance.LoadLevel(_level + SaveManager.Instance.MainMenuSceneIndex);
     }
 
     private void OnEnable()

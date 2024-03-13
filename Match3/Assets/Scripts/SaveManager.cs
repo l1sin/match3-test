@@ -1,16 +1,26 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SaveManager : MonoBehaviour
 {
     public static SaveManager Instance;
     public Progress CurrentProgress;
-
-    private void Start()
+    public int MainMenuSceneIndex;
+    public KeyCode SaveKey;
+    private void OnEnable()
     {
-        LoadData();
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+        DontDestroyOnLoad(gameObject);
     }
 
-    public void LoadData()
+    public void LoadDataLocal()
     {
         Progress progress;
         if (PlayerPrefs.HasKey("save"))
@@ -23,29 +33,54 @@ public class SaveManager : MonoBehaviour
         else
         {
             progress = new Progress();
-            Debug.Log("File does not exist. Creating save file");
+            SaveData(progress);
+            Debug.Log("File do not exists. Creating save file");
         }
-        SaveData(progress);
+        SceneManager.LoadScene(MainMenuSceneIndex);
+    }
+
+    public void LoadDataCloud(string json)
+    {
+        Progress progress;
+        if (json != null)
+        {
+            progress = JsonUtility.FromJson<Progress>(json);
+            CurrentProgress = progress;
+            Debug.Log($"Loaded from Cloud\n{json}");
+        }
+        else
+        {
+            progress = new Progress();
+            SaveData(progress);
+            Debug.Log("File do not exists. Creating save file");
+        }
+        SceneManager.LoadScene(MainMenuSceneIndex);
     }
 
     public void SaveData(Progress progress)
+    {
+        SaveDataLocal(progress);
+#if UNITY_EDITOR || UNITY_STANDALONE
+        Debug.Log("Fake CloudSave");
+#elif UNITY_WEBGL
+        SaveDataCloud(progress);
+#endif
+    }
+
+    public void SaveDataLocal(Progress progress)
     {
         CurrentProgress = progress;
         string json = JsonUtility.ToJson(progress);
         PlayerPrefs.SetString("save", json);
         PlayerPrefs.Save();
+        Debug.Log($"Local save to PlayerPrefs");
     }
 
-    private void Singleton()
+    public void SaveDataCloud(Progress progress)
     {
-        if (Instance != null && Instance != this) Destroy(gameObject);
-        else Instance = this;
-        gameObject.transform.parent = null;
-        DontDestroyOnLoad(gameObject);
-    }
-
-    private void OnEnable()
-    {
-        Singleton();
+        CurrentProgress = progress;
+        string json = JsonUtility.ToJson(progress);
+        Yandex.SaveExtern(json);
+        Debug.Log($"Cloud save");
     }
 }
